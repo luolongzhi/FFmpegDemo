@@ -13,4 +13,6 @@
 *.gz
 *.o
 *.so
+*.swp
+.idea
 

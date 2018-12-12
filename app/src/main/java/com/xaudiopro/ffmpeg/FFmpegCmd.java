@@ -2,16 +2,6 @@ package com.xaudiopro.ffmpeg;
 
 public class FFmpegCmd {
 
-    //static {
-        //System.loadLibrary("avutil");
-        //System.loadLibrary("swresample");
-        //System.loadLibrary("avcodec");
-        //System.loadLibrary("avformat");
-        //System.loadLibrary("swscale");
-        //System.loadLibrary("avfilter");
-        //System.loadLibrary("avdevice");
-    //}
-
     private static OnExecListener listener;
 
     public native static int exec(int argc, String[] argv);

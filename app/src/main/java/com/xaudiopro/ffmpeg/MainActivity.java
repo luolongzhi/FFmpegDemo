@@ -25,8 +25,6 @@ public class MainActivity extends AppCompatActivity {
         System.loadLibrary("native-lib");
     }
 
-    //private FFmpegCmd mFFmpegCmd;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,8 +34,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Example of a call to a native method
         TextView tv = (TextView) findViewById(R.id.sample_text);
-        //tv.setText(stringFromJNI());
-        //String a = mFFmpegCmd.testCmd();
 
         findViewById(R.id.btnCutAudio).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,8 +44,6 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
-
-
 
         tv.setText("uuuuuuuu");
     }

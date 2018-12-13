@@ -4413,6 +4413,7 @@ static int transcode(void)
 
         /* dump report by using the output first video and audio streams */
         print_report(0, timer_start, cur_time);
+        ffmpeg_onstep(timer_start, cur_time);
     }
 #if HAVE_PTHREADS
     free_input_threads();

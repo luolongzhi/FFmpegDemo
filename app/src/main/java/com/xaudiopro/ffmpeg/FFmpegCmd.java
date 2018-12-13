@@ -22,6 +22,12 @@ public class FFmpegCmd {
         }
     }
 
+    public static void onStep(long startTime, long curTime) {
+        if (listener != null) {
+            listener.onStep(startTime, curTime);
+        }
+    }
+
     //Java层调用exec执行命令函数
     public static void exec(String[] cmds, OnExecListener listener) {
         FFmpegCmd.listener = listener;
@@ -31,6 +37,7 @@ public class FFmpegCmd {
     public interface OnExecListener {
         void onFinished(int ret);
         void onError(int errCode);
+        void onStep(long startTime, long curTime);
     }
 
 

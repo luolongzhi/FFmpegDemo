@@ -6,6 +6,8 @@
 
 static JavaVM *g_jvm = NULL;
 static jclass g_clazz = NULL;
+static JNIEnv *g_env = NULL;
+static jmethodID g_stepID;
 
 static void ffmpeg_onfinished_callback(int ret) {
     JNIEnv *env;
@@ -50,9 +52,32 @@ static void ffmpeg_onerror_callback(int errCode) {
 
 
 
+static void ffmpeg_onstep_callback(jlong start_time, jlong cur_time) {
+    JNIEnv *env;
+
+    (*g_jvm)->AttachCurrentThread(g_jvm, &env, NULL);
+
+    if (g_clazz == NULL) {
+        return;
+    }
+
+    jmethodID methodID = (*env)->GetStaticMethodID(env, g_clazz, "onStep", "(JJ)V");
+    if (methodID == NULL) {
+        return;
+    }
+
+    (*env)->CallStaticVoidMethod(env, g_clazz, methodID, start_time, cur_time);
+
+    (*g_jvm)->DetachCurrentThread(g_jvm);
+}
+
+
+
+
 static void set_all_callback() {
     ffmpeg_set_onfinished_callback(ffmpeg_onfinished_callback);
     ffmpeg_set_onerror_callback(ffmpeg_onerror_callback);
+    ffmpeg_set_onstep_callback(ffmpeg_onstep_callback);
 }
 
 

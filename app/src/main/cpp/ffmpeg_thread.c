@@ -6,6 +6,7 @@ int num=0;
 
 static void (*ffmpeg_onfinished_callback)(int ret); 
 static void (*ffmpeg_onerror_callback)(int err_code);
+static void (*ffmpeg_onstep_callback)(jlong start_time, jlong cur_time);
 
 void *thread(void *arg) { 
     int result = ffmpeg_exec(num, argvs); 
@@ -50,7 +51,18 @@ void ffmpeg_onerror(int err_code) {
         ffmpeg_onerror_callback(err_code);
     }
 
-    pthread_exit("ffmpeg_thread_exit"); 
+   // pthread_exit("ffmpeg_thread_exit");
+}
+
+//step回调
+void ffmpeg_set_onstep_callback(void (*cb)(jlong start_time, jlong cur_time)) {
+    ffmpeg_onstep_callback = cb;
+}
+
+void ffmpeg_onstep(jlong start_time, jlong cur_time) {
+    if (ffmpeg_onstep_callback){
+        ffmpeg_onstep_callback(start_time, cur_time);
+    }
 }
 
 

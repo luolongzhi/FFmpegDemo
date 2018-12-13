@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void execCmd(String cmd) {
-        show = ProgressDialog.show(MainActivity.this, null, "执行中...", true);
+        //show = ProgressDialog.show(MainActivity.this, null, "执行中...", true);
         tv2 = (TextView) findViewById(R.id.sample_text);
 
 
@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         Toast.makeText(MainActivity.this, "执行完成=" + ret, Toast.LENGTH_SHORT).show();
-                        show.dismiss();
+                        //show.dismiss();
                     }
                 });
             }
@@ -77,10 +77,26 @@ public class MainActivity extends AppCompatActivity {
                         //Toast.makeText(MainActivity.this, "执行错误，错误码=" + errCode, Toast.LENGTH_SHORT).show();
                         //show.dismiss();
                         tv2.setText(String.valueOf(errCode));
-                        show.dismiss();
+                        //show.dismiss();
                     }
                 });
             }
+
+
+            @Override
+            public void onStep(final long startTime, final long curTime) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        //Toast.makeText(MainActivity.this, "执行错误，错误码=" + errCode, Toast.LENGTH_SHORT).show();
+                        //show.dismiss();
+                        tv2.setText("startTime: " + String.valueOf(startTime) + ", curTime: " + String.valueOf(curTime));
+                        //show.dismiss();
+                    }
+                });
+            }
+
+
 
 
         });

@@ -38,6 +38,7 @@ static void ffmpeg_callback(int ret) {
 
 jint Java_com_xaudiopro_ffmpeg_FFmpegCmd_exec(JNIEnv *env, jclass clazz, jint cmdnum, jobjectArray cmdline) {
 
+    //保存java虚拟机环境变量及class 全局引用
     (*env)->GetJavaVM(env, &jvm);
     m_clazz = (*env)->NewGlobalRef(env, clazz);
 
@@ -58,7 +59,17 @@ jint Java_com_xaudiopro_ffmpeg_FFmpegCmd_exec(JNIEnv *env, jclass clazz, jint cm
     ffmpeg_thread_run_cmd(cmdnum, argv);
     ffmpeg_thread_callback(ffmpeg_callback);
 
+    if (cmdline != NULL) {
+        for (i = 0; i < cmdnum; i++) {
+            (*env)->DeleteLocalRef(env, strr[i]);
+
+            //TODO pass argv and release it later
+            /*(*env)->ReleaseStringUTFChars(env, cmdline, argv[i]);*/
+        }
+    }
+
     free(strr);
+
     return 0;
 }
 

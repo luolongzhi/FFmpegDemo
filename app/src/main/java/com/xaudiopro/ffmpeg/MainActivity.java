@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 //String cmd = "ffmpeg -y -i " + path + "/1.mp4" + " -f adts " + path + "/1out.aac";
                 String cmd = "ffmpeg -y -i " + path + "/pm.mp3" + " -f wav " + path + "/pm.wav";
-                toExec(cmd);
+                execCmd(cmd);
             }
 
         });
@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         tv.setText("uuuuuuuu");
     }
 
-    private void toExec(String cmd) {
+    private void execCmd(String cmd) {
         show = ProgressDialog.show(MainActivity.this, null, "执行中...", true);
         //转换为数组
         String[] cmds = cmd.split(" ");
@@ -65,8 +65,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
             }
-
-
         });
 
 

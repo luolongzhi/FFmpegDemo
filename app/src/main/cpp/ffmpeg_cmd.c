@@ -4,44 +4,34 @@
 #include "ffmpeg_cmd.h"
 #include "ffmpeg_thread.h"
 
-
-static JavaVM *jvm = NULL;
-//java虚拟机
-static jclass m_clazz = NULL;//当前类(面向java)
-
-//回调执行Java方法，参考Jni反射+Java反射
-void callJavaMethod(JNIEnv *env, jclass clazz, int ret) {
-    if (clazz == NULL) {
-        //LOGE("---------------------------class isNULL-------------------------------");
-        return;
-    }
-
-    //获取方法ID 通过javap -s -public FFmpegCmd命令生成
-    jmethodID methodID = (*env)->GetStaticMethodID(env, clazz, "onFinished", "(I)V");
-    if (methodID == NULL) {
-        //LOGE("--------------------------methodID is NULL----------------------------");
-        return;
-    }
-
-    (*env)->CallStaticVoidMethod(env, clazz, methodID, ret);
-}
+static JavaVM *g_jvm = NULL;
+static jclass g_clazz = NULL;
 
 static void ffmpeg_onfinished_callback(int ret) {
     JNIEnv *env;
 
-    (*jvm)->AttachCurrentThread(jvm, &env, NULL);
+    (*g_jvm)->AttachCurrentThread(g_jvm, &env, NULL);
 
-    callJavaMethod(env, m_clazz, ret);
+    if (g_clazz == NULL) {
+        return;
+    }
 
-    (*jvm)->DetachCurrentThread(jvm);
+    jmethodID methodID = (*env)->GetStaticMethodID(env, g_clazz, "onFinished", "(I)V");
+    if (methodID == NULL) {
+        return;
+    }
+
+    (*env)->CallStaticVoidMethod(env, g_clazz, methodID, ret);
+
+    (*g_jvm)->DetachCurrentThread(g_jvm);
 }
 
 
 jint Java_com_xaudiopro_ffmpeg_FFmpegCmd_exec(JNIEnv *env, jclass clazz, jint cmdnum, jobjectArray cmdline) {
 
     //保存java虚拟机环境变量及class 全局引用
-    (*env)->GetJavaVM(env, &jvm);
-    m_clazz = (*env)->NewGlobalRef(env, clazz);
+    (*env)->GetJavaVM(env, &g_jvm);
+    g_clazz = (*env)->NewGlobalRef(env, clazz);
 
     int i = 0;
     char **argv = NULL;

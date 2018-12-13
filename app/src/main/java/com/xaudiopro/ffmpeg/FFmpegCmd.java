@@ -9,10 +9,10 @@ public class FFmpegCmd {
     public native static int exec(int argc, String[] argv);
 
     //命令执行完成函数, C端反射回调使用
-    public static void onExecuted(int ret) {
+    public static void onFinished(int ret) {
         //判断上层java层监听是否设置，设置后执行回调
         if (listener != null) {
-            listener.onExecuted(ret);
+            listener.onFinished(ret);
         }
     }
 
@@ -23,7 +23,7 @@ public class FFmpegCmd {
     }
 
     public interface OnExecListener {
-        void onExecuted(int ret);
+        void onFinished(int ret);
     }
 
 

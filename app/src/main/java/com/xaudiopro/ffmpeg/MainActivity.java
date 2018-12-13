@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
         FFmpegCmd.exec(cmds, new FFmpegCmd.OnExecListener() {
             @Override
-            public void onExecuted(final int ret) {
+            public void onFinished(final int ret) {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {

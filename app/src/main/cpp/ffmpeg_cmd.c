@@ -17,7 +17,7 @@ void callJavaMethod(JNIEnv *env, jclass clazz, int ret) {
     }
 
     //获取方法ID 通过javap -s -public FFmpegCmd命令生成
-    jmethodID methodID = (*env)->GetStaticMethodID(env, clazz, "onExecuted", "(I)V");
+    jmethodID methodID = (*env)->GetStaticMethodID(env, clazz, "onFinished", "(I)V");
     if (methodID == NULL) {
         //LOGE("--------------------------methodID is NULL----------------------------");
         return;
@@ -26,10 +26,11 @@ void callJavaMethod(JNIEnv *env, jclass clazz, int ret) {
     (*env)->CallStaticVoidMethod(env, clazz, methodID, ret);
 }
 
-static void ffmpeg_callback(int ret) {
+static void ffmpeg_onfinished_callback(int ret) {
     JNIEnv *env;
 
     (*jvm)->AttachCurrentThread(jvm, &env, NULL);
+
     callJavaMethod(env, m_clazz, ret);
 
     (*jvm)->DetachCurrentThread(jvm);
@@ -56,8 +57,10 @@ jint Java_com_xaudiopro_ffmpeg_FFmpegCmd_exec(JNIEnv *env, jclass clazz, jint cm
         }
     }
     
+    //set all callback
+    ffmpeg_set_onfinished_callback(ffmpeg_onfinished_callback);
+
     ffmpeg_thread_run_cmd(cmdnum, argv);
-    ffmpeg_thread_callback(ffmpeg_callback);
 
     if (cmdline != NULL) {
         for (i = 0; i < cmdnum; i++) {

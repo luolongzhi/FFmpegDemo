@@ -16,6 +16,12 @@ public class FFmpegCmd {
         }
     }
 
+    public static void onError(int errCode) {
+        if (listener != null) {
+            listener.onError(errCode);
+        }
+    }
+
     //Java层调用exec执行命令函数
     public static void exec(String[] cmds, OnExecListener listener) {
         FFmpegCmd.listener = listener;
@@ -24,6 +30,7 @@ public class FFmpegCmd {
 
     public interface OnExecListener {
         void onFinished(int ret);
+        void onError(int errCode);
     }
 
 

@@ -16,11 +16,14 @@ extern "C" {
 #endif
 
 int ffmpeg_thread_run_cmd(int cmdnum,char **argv); 
-void ffmpeg_thread_exit(int ret); 
 
 
 //回调函数通知java调用
 void ffmpeg_set_onfinished_callback(void (*cb)(int ret));
+void ffmpeg_thread_exit(int ret); 
+
+void ffmpeg_set_onerror_callback(void (*cb)(int err_code));
+void ffmpeg_onerror(int err_code);
 
 
 #ifdef __cplusplus

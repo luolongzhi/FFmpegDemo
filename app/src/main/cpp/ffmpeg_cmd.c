@@ -24,6 +24,35 @@ static void ffmpeg_onfinished_callback(int ret) {
     (*env)->CallStaticVoidMethod(env, g_clazz, methodID, ret);
 
     (*g_jvm)->DetachCurrentThread(g_jvm);
+
+}
+
+
+static void ffmpeg_onerror_callback(int errCode) {
+    JNIEnv *env;
+
+    (*g_jvm)->AttachCurrentThread(g_jvm, &env, NULL);
+
+    if (g_clazz == NULL) {
+        return;
+    }
+
+    jmethodID methodID = (*env)->GetStaticMethodID(env, g_clazz, "onError", "(I)V");
+    if (methodID == NULL) {
+        return;
+    }
+
+    (*env)->CallStaticVoidMethod(env, g_clazz, methodID, errCode);
+
+    (*g_jvm)->DetachCurrentThread(g_jvm);
+}
+
+
+
+
+static void set_all_callback() {
+    ffmpeg_set_onfinished_callback(ffmpeg_onfinished_callback);
+    ffmpeg_set_onerror_callback(ffmpeg_onerror_callback);
 }
 
 
@@ -48,7 +77,7 @@ jint Java_com_xaudiopro_ffmpeg_FFmpegCmd_exec(JNIEnv *env, jclass clazz, jint cm
     }
     
     //set all callback
-    ffmpeg_set_onfinished_callback(ffmpeg_onfinished_callback);
+    set_all_callback();
 
     ffmpeg_thread_run_cmd(cmdnum, argv);
 

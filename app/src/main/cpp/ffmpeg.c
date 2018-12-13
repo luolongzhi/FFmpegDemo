@@ -105,6 +105,7 @@
 #include "cmdutils.h"
 
 #include "libavutil/avassert.h"
+#include "ffmpeg_thread.h"
 
 const char program_name[] = "ffmpeg";
 const int program_birth_year = 2000;
@@ -4567,6 +4568,8 @@ int ffmpeg_exec(int argc, char **argv)
         argc--;
         argv++;
     }
+
+    /*ffmpeg_onerror(100);*/
 
     avcodec_register_all();
 #if CONFIG_AVDEVICE

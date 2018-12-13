@@ -59,12 +59,24 @@ public class MainActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Log.v("uuuuuuuuuuiiii", "jjjj");
                         Toast.makeText(MainActivity.this, "执行完成=" + ret, Toast.LENGTH_SHORT).show();
                         show.dismiss();
                     }
                 });
             }
+
+            @Override
+            public void onError(final int errCode) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(MainActivity.this, "执行错误，错误码=" + errCode, Toast.LENGTH_SHORT).show();
+                        show.dismiss();
+                    }
+                });
+            }
+
+
         });
 
 

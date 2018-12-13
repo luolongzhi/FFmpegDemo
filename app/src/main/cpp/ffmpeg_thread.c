@@ -3,16 +3,15 @@
 pthread_t ntid; 
 char **argvs = NULL; 
 int num=0; 
+
 static void (*ffmpeg_onfinished_callback)(int ret); 
+static void (*ffmpeg_onerror_callback)(int err_code);
 
 void *thread(void *arg) { 
     int result = ffmpeg_exec(num, argvs); 
     return ((void *)0); 
 } 
 
-/**
- * 新建子线程执行ffmpeg命令
- */ 
 int ffmpeg_thread_run_cmd(int cmdnum, char **argv) { 
     num = cmdnum; 
     argvs = argv; 
@@ -27,6 +26,7 @@ int ffmpeg_thread_run_cmd(int cmdnum, char **argv) {
 } 
 
 
+//执行完成回调或退出回调及外部调用函数
 void ffmpeg_set_onfinished_callback(void (*cb)(int ret)) { 
     ffmpeg_onfinished_callback = cb; 
 } 
@@ -38,3 +38,19 @@ void ffmpeg_thread_exit(int ret) {
     
     pthread_exit("ffmpeg_thread_exit"); 
 }
+
+
+//错误回调
+void ffmpeg_set_onerror_callback(void (*cb)(int err_code)) {
+    ffmpeg_onerror_callback = cb;
+}
+
+void ffmpeg_onerror(int err_code) {
+    if (ffmpeg_onerror_callback){
+        ffmpeg_onerror_callback(err_code);
+    }
+
+    pthread_exit("ffmpeg_thread_exit"); 
+}
+
+

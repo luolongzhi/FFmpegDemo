@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     public ProgressDialog show;
+    public TextView tv2;
 
 
     // Used to load the 'native-lib' library on application startup.
@@ -50,6 +51,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void execCmd(String cmd) {
         show = ProgressDialog.show(MainActivity.this, null, "执行中...", true);
+        tv2 = (TextView) findViewById(R.id.sample_text);
+
+
         //转换为数组
         String[] cmds = cmd.split(" ");
 
@@ -70,7 +74,9 @@ public class MainActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(MainActivity.this, "执行错误，错误码=" + errCode, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(MainActivity.this, "执行错误，错误码=" + errCode, Toast.LENGTH_SHORT).show();
+                        //show.dismiss();
+                        tv2.setText(String.valueOf(errCode));
                         show.dismiss();
                     }
                 });

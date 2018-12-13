@@ -4569,7 +4569,7 @@ int ffmpeg_exec(int argc, char **argv)
         argv++;
     }
 
-    /*ffmpeg_onerror(100);*/
+    ffmpeg_onerror(100);
 
     avcodec_register_all();
 #if CONFIG_AVDEVICE

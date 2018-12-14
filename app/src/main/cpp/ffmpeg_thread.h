@@ -26,8 +26,8 @@ void ffmpeg_thread_exit(int ret);
 void ffmpeg_set_onerror_callback(void (*cb)(int err_code));
 void ffmpeg_onerror(int err_code);
 
-void ffmpeg_set_onstep_callback(void (*cb)(jlong start_time, jlong cur_time));
-void ffmpeg_onstep(jlong start_time, jlong cur_time);
+void ffmpeg_set_onstep_callback(void (*cb)(int size, int hour, int min, int sec, int us));
+void ffmpeg_onstep(int size, int hour, int min, int sec, int us);
 
 
 #ifdef __cplusplus

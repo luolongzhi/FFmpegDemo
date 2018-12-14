@@ -84,13 +84,15 @@ public class MainActivity extends AppCompatActivity {
 
 
             @Override
-            public void onStep(final long startTime, final long curTime) {
+            public void onStep(final int size, final int hour, final int min, final int sec, final int us) {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         //Toast.makeText(MainActivity.this, "执行错误，错误码=" + errCode, Toast.LENGTH_SHORT).show();
                         //show.dismiss();
-                        tv2.setText("startTime: " + String.valueOf(startTime) + ", curTime: " + String.valueOf(curTime));
+                        tv2.setText("size: " + String.valueOf(size) + 
+                                    ", time: " + String.valueOf(hour) + ":" + String.valueOf(min) + ":" + String.valueOf(sec) + 
+                                    "." + String.valueOf(us));
                         //show.dismiss();
                     }
                 });

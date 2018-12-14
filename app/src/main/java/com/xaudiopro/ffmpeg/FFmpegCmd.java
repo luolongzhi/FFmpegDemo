@@ -22,9 +22,9 @@ public class FFmpegCmd {
         }
     }
 
-    public static void onStep(long startTime, long curTime) {
+    public static void onStep(int size, int hour, int min, int sec, int us) {
         if (listener != null) {
-            listener.onStep(startTime, curTime);
+            listener.onStep(size, hour, min, sec, us);
         }
     }
 
@@ -37,7 +37,7 @@ public class FFmpegCmd {
     public interface OnExecListener {
         void onFinished(int ret);
         void onError(int errCode);
-        void onStep(long startTime, long curTime);
+        void onStep(int size, int hour, int min, int sec, int us);
     }
 
 

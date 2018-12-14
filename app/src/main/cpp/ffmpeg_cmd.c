@@ -52,7 +52,7 @@ static void ffmpeg_onerror_callback(int errCode) {
 
 
 
-static void ffmpeg_onstep_callback(jlong start_time, jlong cur_time) {
+static void ffmpeg_onstep_callback(int size, int hour, int min, int sec, int us) {
     JNIEnv *env;
 
     (*g_jvm)->AttachCurrentThread(g_jvm, &env, NULL);
@@ -61,12 +61,12 @@ static void ffmpeg_onstep_callback(jlong start_time, jlong cur_time) {
         return;
     }
 
-    jmethodID methodID = (*env)->GetStaticMethodID(env, g_clazz, "onStep", "(JJ)V");
+    jmethodID methodID = (*env)->GetStaticMethodID(env, g_clazz, "onStep", "(IIIII)V");
     if (methodID == NULL) {
         return;
     }
 
-    (*env)->CallStaticVoidMethod(env, g_clazz, methodID, start_time, cur_time);
+    (*env)->CallStaticVoidMethod(env, g_clazz, methodID, size, hour, min, sec, us);
 
     (*g_jvm)->DetachCurrentThread(g_jvm);
 }

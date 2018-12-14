@@ -1602,7 +1602,9 @@ static void print_final_stats(int64_t total_size)
     }
 }
 
-static void print_report(int is_last_report, int64_t timer_start, int64_t cur_time)
+/*static void print_report(int is_last_report, int64_t timer_start, int64_t cur_time)*/
+static void print_report(int is_last_report, int64_t timer_start, int64_t cur_time, 
+                         int *size_out, int *hours_out, int *mins_out, int *secs_out, int *us_out)
 {
     char buf[1024];
     AVBPrint buf_script;
@@ -1724,6 +1726,12 @@ static void print_report(int is_last_report, int64_t timer_start, int64_t cur_ti
     secs %= 60;
     hours = mins / 60;
     mins %= 60;
+
+    *size_out = (int)(total_size/1024.0);
+    *hours_out = hours;
+    *mins_out = mins;
+    *secs_out = secs;
+    *us_out = (int)((100*us)/AV_TIME_BASE);
 
     bitrate = pts && total_size >= 0 ? total_size * 8 / (pts / 1000.0) : -1;
     speed = t != 0.0 ? (double)pts / AV_TIME_BASE / t : -1;
@@ -4372,6 +4380,7 @@ static int transcode(void)
     InputStream *ist;
     int64_t timer_start;
     int64_t total_packets_written = 0;
+    int size_out, hours_out, mins_out, secs_out, us_out;
 
     ret = transcode_init();
     if (ret < 0)
@@ -4412,8 +4421,9 @@ static int transcode(void)
         }
 
         /* dump report by using the output first video and audio streams */
-        print_report(0, timer_start, cur_time);
-        ffmpeg_onstep(timer_start, cur_time);
+        /*print_report(0, timer_start, cur_time);*/
+        print_report(0, timer_start, cur_time, &size_out, &hours_out, &mins_out, &secs_out, &us_out);
+        ffmpeg_onstep(size_out, hours_out, mins_out, secs_out, us_out);
     }
 #if HAVE_PTHREADS
     free_input_threads();
@@ -4448,7 +4458,9 @@ static int transcode(void)
     }
 
     /* dump report by using the first video and audio streams */
-    print_report(1, timer_start, av_gettime_relative());
+    /*print_report(1, timer_start, av_gettime_relative());*/
+    print_report(1, timer_start, av_gettime_relative(), &size_out, &hours_out, &mins_out, &secs_out, &us_out);
+    ffmpeg_onstep(size_out, hours_out, mins_out, secs_out, us_out);
 
     /* close each encoder */
     for (i = 0; i < nb_output_streams; i++) {

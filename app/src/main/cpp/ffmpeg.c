@@ -4582,7 +4582,7 @@ int ffmpeg_exec(int argc, char **argv)
         argv++;
     }
 
-    ffmpeg_onerror(100);
+    /*ffmpeg_onerror(100);*/
 
     avcodec_register_all();
 #if CONFIG_AVDEVICE
@@ -4621,6 +4621,7 @@ int ffmpeg_exec(int argc, char **argv)
             want_sdp = 0;
     }
 
+    ffmpeg_onprepared();
     current_time = ti = getutime();
     if (transcode() < 0)
         exit_program(1);

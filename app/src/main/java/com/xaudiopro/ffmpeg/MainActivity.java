@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     public ProgressDialog show;
+    public TextView tv1;
     public TextView tv2;
 
 
@@ -39,8 +40,8 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btnCutAudio).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //String cmd = "ffmpeg -y -i " + path + "/1.mp4" + " -f adts " + path + "/1out.aac";
-                String cmd = "ffmpeg -y -i " + path + "/pm.mp3" + " -f wav " + path + "/pm.wav";
+                String cmd = "ffmpeg -y -i " + path + "/1.mp4" + " -f adts " + path + "/1out.aac";
+                //String cmd = "ffmpeg -y -i " + path + "/pm.mp3" + " -f wav " + path + "/pm.wav";
                 execCmd(cmd);
             }
 
@@ -51,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void execCmd(String cmd) {
         //show = ProgressDialog.show(MainActivity.this, null, "执行中...", true);
+        tv1 = (TextView) findViewById(R.id.sample_text1);
         tv2 = (TextView) findViewById(R.id.sample_text);
 
 
@@ -58,6 +60,16 @@ public class MainActivity extends AppCompatActivity {
         String[] cmds = cmd.split(" ");
 
         FFmpegCmd.exec(cmds, new FFmpegCmd.OnExecListener() {
+            @Override
+            public void onPrepared(final int duration) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        tv1.setText("duration: " + String.valueOf(duration));
+                    }
+                });
+            }
+
             @Override
             public void onFinished(final int ret) {
                 runOnUiThread(new Runnable() {

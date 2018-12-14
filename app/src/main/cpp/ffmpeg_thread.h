@@ -20,6 +20,10 @@ int ffmpeg_thread_run_cmd(int cmdnum,char **argv);
 
 
 //回调函数通知java调用
+void ffmpeg_set_duration(int duration);
+void ffmpeg_set_onprepared_callback(void (*cb)(int duration));
+void ffmpeg_onprepared();
+
 void ffmpeg_set_onfinished_callback(void (*cb)(int ret));
 void ffmpeg_thread_exit(int ret); 
 

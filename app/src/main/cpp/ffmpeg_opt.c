@@ -40,6 +40,7 @@
 #include "libavutil/parseutils.h"
 #include "libavutil/pixdesc.h"
 #include "libavutil/pixfmt.h"
+#include "ffmpeg_thread.h"
 
 #define DEFAULT_PASS_LOGFILENAME_PREFIX "ffmpeg2pass"
 
@@ -1024,6 +1025,8 @@ static int open_input_file(OptionsContext *o, const char *filename)
             exit_program(1);
         }
     }
+
+    ffmpeg_set_duration(ic->duration);
 
     if (o->start_time_eof != AV_NOPTS_VALUE) {
         if (ic->duration>0) {

@@ -3,7 +3,9 @@
 pthread_t ntid; 
 char **argvs = NULL; 
 int num=0; 
+static int g_duration = 0;
 
+static void (*ffmpeg_onprepared_callback)(int duration); 
 static void (*ffmpeg_onfinished_callback)(int ret); 
 static void (*ffmpeg_onerror_callback)(int err_code);
 static void (*ffmpeg_onstep_callback)(int size, int hour, int min, int sec, int us);
@@ -27,6 +29,22 @@ int ffmpeg_thread_run_cmd(int cmdnum, char **argv) {
 } 
 
 
+//准备完成回调, 在transcode之前如果准备好则回调并把原文件时长通知上层
+void ffmpeg_set_duration(int duration) {
+    g_duration = duration;
+}
+
+void ffmpeg_set_onprepared_callback(void (*cb)(int duration)) { 
+    ffmpeg_onprepared_callback = cb; 
+} 
+
+void ffmpeg_onprepared() { 
+    if (ffmpeg_onprepared_callback) { 
+        ffmpeg_onprepared_callback(g_duration); 
+    } 
+}
+
+
 //执行完成回调或退出回调及外部调用函数
 void ffmpeg_set_onfinished_callback(void (*cb)(int ret)) { 
     ffmpeg_onfinished_callback = cb; 
@@ -37,6 +55,8 @@ void ffmpeg_thread_exit(int ret) {
         ffmpeg_onfinished_callback(ret); 
     } 
     
+    g_duration = 0;
+
     pthread_exit("ffmpeg_thread_exit"); 
 }
 
@@ -51,7 +71,7 @@ void ffmpeg_onerror(int err_code) {
         ffmpeg_onerror_callback(err_code);
     }
 
-   // pthread_exit("ffmpeg_thread_exit");
+    pthread_exit("ffmpeg_thread_exit");
 }
 
 //step回调
